@@ -1,8 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fcf9f4;
+  --foreground: #20150e;
+  --roast-950: #120b07;
+  --roast-900: #1e130c;
+  --roast-850: #26180f;
+  --roast-800: #332014;
+  --roast-700: #472c1c;
+  --roast-600: #623f29;
+  
+  --caramel-600: #9e531e;
+  --caramel-500: #c26926;
+  --caramel-400: #dc7e36;
+  --caramel-300: #ea9d60;
+  --caramel-100: #fae8d8;
+  --caramel-50: #fdf5ee;
+  
+  --cream-50: #fdfbf7;
+  --cream-100: #f7f2ea;
+  --cream-200: #eee4d5;
+  --cream-300: #e2d3be;
+  --cream-400: #c7b29a;
 }
 
 @theme inline {
@@ -10,17 +29,109 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
+
+  --color-roast-950: var(--roast-950);
+  --color-roast-900: var(--roast-900);
+  --color-roast-850: var(--roast-850);
+  --color-roast-800: var(--roast-800);
+  --color-roast-700: var(--roast-700);
+  --color-roast-600: var(--roast-600);
+
+  --color-caramel-600: var(--caramel-600);
+  --color-caramel-500: var(--caramel-500);
+  --color-caramel-400: var(--caramel-400);
+  --color-caramel-300: var(--caramel-300);
+  --color-caramel-100: var(--caramel-100);
+  --color-caramel-50: var(--caramel-50);
+
+  --color-cream-50: var(--cream-50);
+  --color-cream-100: var(--cream-100);
+  --color-cream-200: var(--cream-200);
+  --color-cream-300: var(--cream-300);
+  --color-cream-400: var(--cream-400);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Smooth Transitions */
+* {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Steam Rising Animation for Coffee */
+@keyframes steamRise {
+  0% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  70% {
+    transform: translateY(-8px) scaleX(1.15);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-16px) scaleX(1.3);
+    opacity: 0;
+  }
+}
+
+.animate-steam {
+  animation: steamRise 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Ambient warm glow pulse */
+@keyframes warmPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.animate-warm-pulse {
+  animation: warmPulse 6s ease-in-out infinite;
+}
+
+/* Gentle float */
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+/* Warm textured coffee gradient */
+.coffee-gradient {
+  background: radial-gradient(circle at 50% -20%, #3e2617 0%, #1c110a 100%);
+}
+
+.coffee-card-gradient {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 242, 234, 0.7) 100%);
+}
+
+.dark-coffee-card {
+  background: linear-gradient(145deg, #26180f 0%, #1a100a 100%);
 }
