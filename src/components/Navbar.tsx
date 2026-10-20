@@ -1,12 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coffee, Briefcase, Users, Flame, Menu, X, PlusCircle, Sparkles } from "lucide-react";
+import { Coffee, Briefcase, Users, Flame, Menu, X, PlusCircle, Sparkles, LogIn, LogOut } from "lucide-react";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
+
+  // Re-check who is logged in whenever the page changes (e.g. right after login)
+  useEffect(() => {
+    fetch("/api/me")
+      .then((res) => (res.ok ? res.json() : { user: null }))
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null));
+  }, [pathname]);
+
+  async function handleLogout() {
+    await fetch("/api/logout", { method: "POST" });
+    setUser(null);
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-[#fdfbf7]/90 backdrop-blur-md border-b border-[#eee4d5] transition-all">
@@ -66,6 +82,35 @@ export default function Navbar() {
 
           {/* Right Action Buttons with spring hover */}
           <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-[#472c1c] max-w-[160px] truncate">{user.email}</span>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#472c1c] hover:text-[#c26926] rounded-xl transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Log out
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#472c1c] hover:text-[#c26926] rounded-xl transition-colors"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#472c1c] hover:text-[#c26926] rounded-xl transition-colors"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
+
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/jobs?post=true"
@@ -142,6 +187,37 @@ export default function Navbar() {
               </Link>
 
               <div className="pt-4 flex flex-col gap-2">
+                {user ? (
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#472c1c] border border-[#e2d3be] rounded-xl hover:bg-[#fae8d8]/50 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Log out ({user.email})
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#472c1c] border border-[#e2d3be] rounded-xl hover:bg-[#fae8d8]/50 transition-colors"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      Log in
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#472c1c] border border-[#e2d3be] rounded-xl hover:bg-[#fae8d8]/50 transition-colors"
+                    >
+                      Sign up
+                    </Link>
+                  </>
+                )}
+
                 <Link
                   href="/jobs?post=true"
                   onClick={() => setMobileMenuOpen(false)}
